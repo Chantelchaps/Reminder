@@ -1,0 +1,35 @@
+import unittest
+import os
+from reminder import ReminderManager # type: ignore
+
+class TestReminderManager(unittest.TestCase):
+    def setUp(self):
+        self.current_directory = os.path.dirname(os.path.realpath(__file__))
+        self.file_path = os.path.join(self.current_directory, "test_reminders.csv")
+        self.manager = ReminderManager(self.file_path)
+
+    def tearDown(self):
+        os.remove(self.file_path)
+
+    def test_save_and_get_reminder_email(self):
+        self.manager.save_reminder("email", "example@example.com", "Test email")
+        reminders = self.manager.get_reminders()
+        self.assertEqual(len(reminders), 1)
+        self.assertEqual(reminders[0].recipient, "example@example.com")
+        self.assertEqual(reminders[0].message, "Test email")
+
+    def test_save_and_get_reminder_sms(self):
+        self.manager.save_reminder("sms", "+1234567890", "Test SMS")
+        reminders = self.manager.get_reminders()
+        self.assertEqual(len(reminders), 1)
+        self.assertEqual(reminders[0].phone_number, "+1234567890")
+        self.assertEqual(reminders[0].message, "Test SMS")
+
+    def test_save_and_get_reminder_audio(self):
+        self.manager.save_reminder("audio", "test_audio.mp3")
+        reminders = self.manager.get_reminders()
+        self.assertEqual(len(reminders), 1)
+        self.assertEqual(reminders[0].audio_file, "test_audio.mp3")
+
+if __name__ == "__main__":
+    unittest.main()
