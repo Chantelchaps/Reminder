@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 from io import StringIO
-from reminder_manager import ReminderManager
+from reminder_manager import ReminderManager # type: ignore
 
 class TestReminderManager(unittest.TestCase):
     def setUp(self):
@@ -14,9 +14,9 @@ class TestReminderManager(unittest.TestCase):
         manager.save_reminder("audio", "test_audio.mp3")
         reminders = manager.get_reminders()
         self.assertEqual(len(reminders), 3)
-        self.assertIsInstance(reminders[0], EmailReminder)
-        self.assertIsInstance(reminders[1], SMSReminder)
-        self.assertIsInstance(reminders[2], AudioReminder)
+        self.assertIsInstance(reminders[0], EmailReminder) # type: ignore
+        self.assertIsInstance(reminders[1], SMSReminder) # type: ignore
+        self.assertIsInstance(reminders[2], AudioReminder) # type: ignore
 
     def test_save_and_get_reminder_file_operations(self):
         manager = ReminderManager(self.test_file_path)
