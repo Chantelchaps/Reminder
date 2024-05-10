@@ -1,17 +1,24 @@
 import unittest
+import sys
 import os
-from reminder import ReminderManager # type: ignore
+
 
 class TestReminderManager(unittest.TestCase):
     def setUp(self):
-        self.current_directory = os.path.dirname(os.path.realpath(__file__))
-        self.file_path = os.path.join(self.current_directory, "test_reminders.csv")
-        self.manager = ReminderManager(self.file_path)
+        # Add the directory containing the module to the Python path
+        module_directory = os.path.abspath(os.path.dirname(__file__))
+        sys.path.append(module_directory)
+
+        # Set up the ReminderManager instance
+        self.file_path = os.path.join(module_directory, "test_reminders.csv")
+        self.manager = ReminderManager(self.file_path) # type: ignore
 
     def tearDown(self):
+        # Remove the test file after each test
         os.remove(self.file_path)
 
     def test_save_and_get_reminder_email(self):
+        # Test saving and retrieving an email reminder
         self.manager.save_reminder("email", "example@example.com", "Test email")
         reminders = self.manager.get_reminders()
         self.assertEqual(len(reminders), 1)
@@ -19,6 +26,7 @@ class TestReminderManager(unittest.TestCase):
         self.assertEqual(reminders[0].message, "Test email")
 
     def test_save_and_get_reminder_sms(self):
+        # Test saving and retrieving an SMS reminder
         self.manager.save_reminder("sms", "+1234567890", "Test SMS")
         reminders = self.manager.get_reminders()
         self.assertEqual(len(reminders), 1)
@@ -26,6 +34,7 @@ class TestReminderManager(unittest.TestCase):
         self.assertEqual(reminders[0].message, "Test SMS")
 
     def test_save_and_get_reminder_audio(self):
+        # Test saving and retrieving an audio reminder
         self.manager.save_reminder("audio", "test_audio.mp3")
         reminders = self.manager.get_reminders()
         self.assertEqual(len(reminders), 1)
